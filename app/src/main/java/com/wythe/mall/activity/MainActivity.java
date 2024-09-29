@@ -79,3 +79,6 @@ public class MainActivity extends FragmentActivity {
 }
 //4A:A0:29:4A:8C:0D:76:9E:65:61:E3:1F:B7:65:88:D4:CA:70:E7:E7
 //0E:FF:59:81:22:9C:26:73:EE:45:B2:13:14:3D:C8:BC:31:B4:98:6D
+//& "D:\Android studio\jbr\bin\keytool" -v -list -keystore "D:\wcnmDemo\Demo.jks"
+//C:\Users\USER>cd .android
+//C:\Users\USER\.android>"D:\Android studio\jbr\bin\keytool" -v -list -keystore debug.keystore

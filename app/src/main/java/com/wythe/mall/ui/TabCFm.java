@@ -1,7 +1,12 @@
 package com.wythe.mall.ui;
 
+import static com.wythe.mall.utils.MapUtil.convertToLatLng;
+import static com.wythe.mall.utils.MapUtil.convertToLatLonPoint;
+
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
@@ -24,6 +29,21 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.LocationSource.OnLocationChangedListener;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.MapsInitializer;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.BusRouteResult;
+import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.RideRouteResult;
+import com.amap.api.services.route.RouteSearch;
+import com.amap.api.services.route.WalkPath;
+import com.amap.api.services.route.WalkRouteResult;
+import com.wythe.mall.overlay.WalkRouteOverlay;
+import com.wythe.mall.utils.MapUtil;
 
 import net.micode.wcnm.R;
 
@@ -31,7 +51,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class TabCFm extends Fragment implements AMapLocationListener, LocationSource {
+public class TabCFm extends Fragment implements AMapLocationListener, LocationSource, AMap.OnMapClickListener,RouteSearch.OnRouteSearchListener {
     //地图控制器
     private AMap aMap = null;
     //位置更改监听
@@ -47,16 +67,32 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
 
     //请求权限码
     private static final int REQUEST_PERMISSIONS = 9527;
+    //定位样式
+    private MyLocationStyle myLocationStyle = new MyLocationStyle();
+    //起点
+    private LatLonPoint mStartPoint;
+    //终点
+    private LatLonPoint mEndPoint;
+    //路线搜索对象
+    private RouteSearch routeSearch;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.tab_c, container, false);
+
+        MapsInitializer.setApiKey("da1c4219eea98fcc93e7a123391921bc");
 
         initLocation();
 
         initMap(savedInstanceState);
 
         checkingAndroidVersion();
+
+        initRoute();
+
         return view;
     }
 
@@ -177,6 +213,10 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
                 stringBuffer.append("地址"+address+"\n");
                 Log.d("AmapError",stringBuffer.toString());
 
+                //设置起点
+                mStartPoint = convertToLatLonPoint(new LatLng(latitude, longitude));
+
+
                 mLocationClient.startLocation();
 
                 if(mListener!=null){
@@ -229,14 +269,34 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
         mapView.onCreate(savedInstanceState);
         //初始化地图控制器对象
         aMap = mapView.getMap();
+        //设置最小缩放等级为16 ，缩放级别范围为[3, 20]
+        aMap.setMinZoomLevel(12);
+
+        // 自定义定位蓝点图标
+//        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.gps_point));
+        // 自定义精度范围的圆形边框颜色  都为0则透明
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));
+        // 自定义精度范围的圆形边框宽度  0 无宽度
+        myLocationStyle.strokeWidth(0);
+        // 设置圆形的填充颜色  都为0则透明
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));
+        //设置定位蓝点的Style
+        aMap.setMyLocationStyle(myLocationStyle);
 
         // 设置定位监听
         aMap.setLocationSource(this);
         // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setMyLocationEnabled(true);
+        //地图点击监听
+        aMap.setOnMapClickListener(this);
+
+
+
     }
 
-
+    /**
+     * 激活定位
+     */
     @Override
     public void activate(OnLocationChangedListener onLocationChangedListener) {
         mListener = onLocationChangedListener;
@@ -245,6 +305,9 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
         }
     }
 
+    /**
+     * 停止定位
+     */
     @Override
     public void deactivate() {
         mListener = null;
@@ -253,5 +316,105 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
             mLocationClient.onDestroy();
         }
         mLocationClient = null;
+        mapView.onDestroy();
     }
+
+    /**
+     * 点击地图
+     */
+    @Override
+    public void onMapClick(LatLng latLng) {
+        mEndPoint = convertToLatLonPoint(latLng);
+
+        startRouteSearch();
+    }
+
+    /**
+     * 初始化路线
+     */
+    private void initRoute() {
+        try {
+            routeSearch = new RouteSearch(this.getContext());
+        } catch (com.amap.api.services.core.AMapException e) {
+            throw new RuntimeException(e);
+        }
+        routeSearch.setRouteSearchListener(this);
+    }
+
+    @Override
+    public void onBusRouteSearched(BusRouteResult busRouteResult, int code) {
+
+    }
+
+    @Override
+    public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int code) {
+
+    }
+
+    /**
+     * 步行规划路径结果
+     *
+     * @param walkRouteResult 结果
+     * @param code            结果码
+     */
+    @Override
+    public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int code) {
+        aMap.clear();// 清理地图上的所有覆盖物
+        if (code == AMapException.CODE_AMAP_SUCCESS) {
+            if (walkRouteResult != null && walkRouteResult.getPaths() != null) {
+                if (walkRouteResult.getPaths().size() > 0) {
+                    final WalkPath walkPath = walkRouteResult.getPaths().get(0);
+                    if (walkPath == null) {
+                        return;
+                    }
+                    //绘制路线
+                    WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(
+                            this.getContext(), aMap, walkPath,
+                            walkRouteResult.getStartPos(),
+                            walkRouteResult.getTargetPos());
+                    walkRouteOverlay.removeFromMap();
+                    walkRouteOverlay.addToMap();
+                    walkRouteOverlay.zoomToSpan();
+
+                    int dis = (int) walkPath.getDistance();
+                    int dur = (int) walkPath.getDuration();
+                    String des = MapUtil.getFriendlyTime(dur) + "(" + MapUtil.getFriendlyLength(dis) + ")";
+                }else if (walkRouteResult.getPaths() == null) {
+                    showMsg("对不起，没有搜索到相关数据！");
+                }
+            }else {
+                showMsg("对不起，没有搜索到相关数据！");
+            }
+        }else {
+            showMsg("错误码；" + code);
+        }
+    }
+
+    @Override
+    public void onRideRouteSearched(RideRouteResult rideRouteResult, int code) {
+
+    }
+
+    /**
+     * 开始路线搜索
+     */
+    private void startRouteSearch() {
+        //在地图上添加起点Marker
+        aMap.addMarker(new MarkerOptions()
+                .position(convertToLatLng(mStartPoint))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
+        //在地图上添加终点Marker
+        aMap.addMarker(new MarkerOptions()
+                .position(convertToLatLng(mEndPoint))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
+
+        //搜索路线 构建路径的起终点
+        final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
+                mStartPoint, mEndPoint);
+        //构建步行路线搜索对象
+        RouteSearch.WalkRouteQuery query = new RouteSearch.WalkRouteQuery(fromAndTo, RouteSearch.WalkDefault);
+        // 异步路径规划步行模式查询
+        routeSearch.calculateWalkRouteAsyn(query);
+    }
+
 }
