@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 //import com.wythe.mall.R;
@@ -36,12 +39,18 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.BusPath;
 import com.amap.api.services.route.BusRouteResult;
+import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.RidePath;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
+import com.wythe.mall.overlay.BusRouteOverlay;
+import com.wythe.mall.overlay.DrivingRouteOverlay;
+import com.wythe.mall.overlay.RideRouteOverlay;
 import com.wythe.mall.overlay.WalkRouteOverlay;
 import com.wythe.mall.utils.MapUtil;
 
@@ -75,6 +84,16 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
     private LatLonPoint mEndPoint;
     //路线搜索对象
     private RouteSearch routeSearch;
+    //出行方式数组
+    private static final String[] travelModeArray = {"步行出行", "骑行出行","驾车出行","公交出行"};
+
+    //出行方式值
+    private static int TRAVEL_MODE = 0;
+
+    //数组适配器
+    private ArrayAdapter<String> arrayAdapter;
+    //城市
+    private String city;
 
 
 
@@ -92,6 +111,8 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
         checkingAndroidVersion();
 
         initRoute();
+
+        initTravelMode();
 
         return view;
     }
@@ -212,6 +233,7 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
                 stringBuffer.append("经度"+longitude+"\n");
                 stringBuffer.append("地址"+address+"\n");
                 Log.d("AmapError",stringBuffer.toString());
+                city = aMapLocation.getCity();
 
                 //设置起点
                 mStartPoint = convertToLatLonPoint(new LatLng(latitude, longitude));
@@ -343,12 +365,70 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
 
     @Override
     public void onBusRouteSearched(BusRouteResult busRouteResult, int code) {
+        aMap.clear();// 清理地图上的所有覆盖物
+        if (code == AMapException.CODE_AMAP_SUCCESS) {
+            if (busRouteResult != null && busRouteResult.getPaths() != null) {
+                if (busRouteResult.getPaths().size() > 0) {
+                    final BusPath busPath = busRouteResult.getPaths().get(0);
+                    if (busPath == null) {
+                        return;
+                    }
+                    BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
+                            this.getContext(), aMap, busPath,
+                            busRouteResult.getStartPos(),
+                            busRouteResult.getTargetPos());
+                    busRouteOverlay.removeFromMap();
+                    busRouteOverlay.addToMap();
+                    busRouteOverlay.zoomToSpan();
+
+                    int dis = (int) busPath.getDistance();
+                    int dur = (int) busPath.getDuration();
+                    String des = MapUtil.getFriendlyTime(dur) + "(" + MapUtil.getFriendlyLength(dis) + ")";
+//                    Log.d(TAG, des);
+                } else if (busRouteResult.getPaths() == null) {
+                    showMsg("对不起，没有搜索到相关数据！");
+                }
+            } else {
+                showMsg("对不起，没有搜索到相关数据！");
+            }
+        } else {
+            showMsg("错误码；" + code);
+        }
 
     }
 
     @Override
     public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int code) {
+        aMap.clear();// 清理地图上的所有覆盖物
+        if (code == AMapException.CODE_AMAP_SUCCESS) {
+            if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
+                if (driveRouteResult.getPaths().size() > 0) {
+                    final DrivePath drivePath = driveRouteResult.getPaths()
+                            .get(0);
+                    if(drivePath == null) {
+                        return;
+                    }
+                    DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(
+                            this.getContext(), aMap, drivePath,
+                            driveRouteResult.getStartPos(),
+                            driveRouteResult.getTargetPos(), null);
+                    drivingRouteOverlay.removeFromMap();
+                    drivingRouteOverlay.addToMap();
+                    drivingRouteOverlay.zoomToSpan();
 
+                    int dis = (int) drivePath.getDistance();
+                    int dur = (int) drivePath.getDuration();
+                    String des = MapUtil.getFriendlyTime(dur)+"("+MapUtil.getFriendlyLength(dis)+")";
+//                    Log.d(TAG, des);
+                } else if (driveRouteResult.getPaths() == null) {
+                    showMsg("对不起，没有搜索到相关数据！");
+                }
+            } else {
+                showMsg("对不起，没有搜索到相关数据！");
+            }
+        } else {
+            showMsg("错误码；" + code);
+        }
     }
 
     /**
@@ -392,7 +472,36 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
 
     @Override
     public void onRideRouteSearched(RideRouteResult rideRouteResult, int code) {
+        aMap.clear();// 清理地图上的所有覆盖物
+        if (code == AMapException.CODE_AMAP_SUCCESS) {
+            if (rideRouteResult != null && rideRouteResult.getPaths() != null) {
+                if (rideRouteResult.getPaths().size() > 0) {
+                    final RidePath ridePath = rideRouteResult.getPaths()
+                            .get(0);
+                    if(ridePath == null) {
+                        return;
+                    }
+                    RideRouteOverlay rideRouteOverlay = new RideRouteOverlay(
+                            this.getContext(), aMap, ridePath,
+                            rideRouteResult.getStartPos(),
+                            rideRouteResult.getTargetPos());
+                    rideRouteOverlay.removeFromMap();
+                    rideRouteOverlay.addToMap();
+                    rideRouteOverlay.zoomToSpan();
 
+                    int dis = (int) ridePath.getDistance();
+                    int dur = (int) ridePath.getDuration();
+                    String des = MapUtil.getFriendlyTime(dur)+"("+MapUtil.getFriendlyLength(dis)+")";
+
+                } else if (rideRouteResult.getPaths() == null) {
+                    showMsg("对不起，没有搜索到相关数据！");
+                }
+            } else {
+                showMsg("对不起，没有搜索到相关数据！");
+            }
+        } else {
+            showMsg("错误码；" + code);
+        }
     }
 
     /**
@@ -411,10 +520,67 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
         //搜索路线 构建路径的起终点
         final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
                 mStartPoint, mEndPoint);
-        //构建步行路线搜索对象
-        RouteSearch.WalkRouteQuery query = new RouteSearch.WalkRouteQuery(fromAndTo, RouteSearch.WalkDefault);
-        // 异步路径规划步行模式查询
-        routeSearch.calculateWalkRouteAsyn(query);
+        //出行方式判断
+        switch (TRAVEL_MODE) {
+            case 0://步行
+                //构建步行路线搜索对象
+                RouteSearch.WalkRouteQuery query = new RouteSearch.WalkRouteQuery(fromAndTo, RouteSearch.WalkDefault);
+                // 异步路径规划步行模式查询
+                routeSearch.calculateWalkRouteAsyn(query);
+                break;
+            case 1://骑行
+                //构建骑行路线搜索对象
+                RouteSearch.RideRouteQuery rideQuery = new RouteSearch.RideRouteQuery(fromAndTo, RouteSearch.WalkDefault);
+                //骑行规划路径计算
+                routeSearch.calculateRideRouteAsyn(rideQuery);
+                break;
+            case 2://驾车
+                //构建驾车路线搜索对象  剩余三个参数分别是：途经点、避让区域、避让道路
+                RouteSearch.DriveRouteQuery driveQuery = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.WalkDefault, null, null, "");
+                //驾车规划路径计算
+                routeSearch.calculateDriveRouteAsyn(driveQuery);
+                break;
+            case 3://公交
+                //构建驾车路线搜索对象 第三个参数表示公交查询城市区号，第四个参数表示是否计算夜班车，0表示不计算,1表示计算
+                RouteSearch.BusRouteQuery busQuery = new RouteSearch.BusRouteQuery(fromAndTo, RouteSearch.BusLeaseWalk, city, 0);
+                //公交规划路径计算
+                routeSearch.calculateBusRouteAsyn(busQuery);
+                break;
+
+            default:
+                break;
+        }
+
+//        //构建步行路线搜索对象
+//        RouteSearch.WalkRouteQuery query = new RouteSearch.WalkRouteQuery(fromAndTo, RouteSearch.WalkDefault);
+//        // 异步路径规划步行模式查询
+//        routeSearch.calculateWalkRouteAsyn(query);
     }
+
+    /**
+     * 初始化出行方式
+     */
+    private void initTravelMode() {
+        Spinner spinner = view.findViewById(R.id.spinner);
+
+        //将可选内容与ArrayAdapter连接起来
+        arrayAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, travelModeArray);
+        //设置下拉列表的风格
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //将adapter 添加到spinner中
+        spinner.setAdapter(arrayAdapter);
+        //添加事件Spinner事件监听
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TRAVEL_MODE = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
 
 }
