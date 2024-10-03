@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="120dp" android:background="@color/white"
+    android:paddingLeft="10dp" android:paddingRight="10dp"
+    android:paddingTop="10dp" android:paddingBottom="10dp">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/list_item_image"
+        android:src="@drawable/home_score"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_item_title"
+            android:textColor="@color/black"
+            android:text="中国民航大学北苑菜鸟驿站"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_item_info_container"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:id="@+id/list_item_info"
+                android:layout_height="wrap_content"
+                android:text="东丽区津北路2898号"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

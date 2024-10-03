@@ -1,29 +1,20 @@
 package com.wythe.mall.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
 //import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.facebook.drawee.backends.pipeline.Fresco;
 //import com.wythe.mall.R;
 import com.wythe.mall.adapter.FragmentTabAdapter;
-import com.wythe.mall.mapfuction.MapApplication;
-import com.wythe.mall.ui.HomeFragment;
 import com.wythe.mall.ui.CategoryFragment;
 import com.wythe.mall.ui.My_HomeFragment;
-import com.wythe.mall.ui.TabCFm;
+import com.wythe.mall.ui.ShowMap;
 import com.wythe.mall.ui.CartFragment;
 import com.wythe.mall.ui.PersonalFragment;
 
@@ -31,14 +22,6 @@ import net.micode.wcnm.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
-
-import android.Manifest;
-import android.widget.Toast;
-
-
 
 
 public class MainActivity extends FragmentActivity {
@@ -62,7 +45,7 @@ public class MainActivity extends FragmentActivity {
         radio_button_group = (RadioGroup) findViewById(R.id.radio_button_group);
         fragments.add(new My_HomeFragment());
         fragments.add(new CategoryFragment());
-        fragments.add(new TabCFm());
+        fragments.add(new ShowMap());
         fragments.add(new CartFragment());
         fragments.add(new PersonalFragment());
         tabAdapter = new FragmentTabAdapter(this, fragments, R.id.fragment_content, radio_button_group);

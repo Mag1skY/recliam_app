@@ -4,8 +4,6 @@ import static com.wythe.mall.utils.MapUtil.convertToLatLng;
 import static com.wythe.mall.utils.MapUtil.convertToLatLonPoint;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +28,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.LocationSource;
-import com.amap.api.maps.LocationSource.OnLocationChangedListener;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.MapsInitializer;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -60,7 +57,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class TabCFm extends Fragment implements AMapLocationListener, LocationSource, AMap.OnMapClickListener,RouteSearch.OnRouteSearchListener {
+public class ShowMap extends Fragment implements AMapLocationListener, LocationSource,RouteSearch.OnRouteSearchListener {
     //地图控制器
     private AMap aMap = null;
     //位置更改监听
@@ -95,14 +92,16 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
     //城市
     private String city;
 
-
+    private int PRE_TRAVEL_MODE=-1;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.tab_c, container, false);
+        view=inflater.inflate(R.layout.map, container, false);
 
         MapsInitializer.setApiKey("da1c4219eea98fcc93e7a123391921bc");
+
+        mEndPoint=new LatLonPoint(39.11360516680258,117.35223882307065);
 
         initLocation();
 
@@ -132,6 +131,7 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
         } else {
             //Android6.0以下直接定位
             mLocationClient.startLocation();
+
         }
     }
 
@@ -153,6 +153,7 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
 
             //启动定位
             mLocationClient.startLocation();
+
         } else {
             //false 无权限
             EasyPermissions.requestPermissions(this, "需要权限", REQUEST_PERMISSIONS, permissions);
@@ -205,7 +206,7 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
             //设置是否返回地址信息（默认返回地址信息）
             mLocationOption.setNeedAddress(true);
             //设置定位请求超时时间，单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
-            mLocationOption.setHttpTimeOut(20000);
+            mLocationOption.setHttpTimeOut(30000);
             //关闭缓存机制，高精度定位会产生缓存。
             mLocationOption.setLocationCacheEnable(false);
             //给定位客户端对象设置定位参数
@@ -238,6 +239,10 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
                 //设置起点
                 mStartPoint = convertToLatLonPoint(new LatLng(latitude, longitude));
 
+                if(PRE_TRAVEL_MODE!=TRAVEL_MODE){
+                    PRE_TRAVEL_MODE=TRAVEL_MODE;
+                    startRouteSearch();
+                }
 
                 mLocationClient.startLocation();
 
@@ -310,7 +315,7 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
         // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setMyLocationEnabled(true);
         //地图点击监听
-        aMap.setOnMapClickListener(this);
+//        aMap.setOnMapClickListener(this);
 
 
 
@@ -341,15 +346,17 @@ public class TabCFm extends Fragment implements AMapLocationListener, LocationSo
         mapView.onDestroy();
     }
 
-    /**
-     * 点击地图
-     */
-    @Override
-    public void onMapClick(LatLng latLng) {
-        mEndPoint = convertToLatLonPoint(latLng);
-
-        startRouteSearch();
-    }
+//    /**
+//     * 点击地图
+//     */
+//    @Override
+//    public void onMapClick(LatLng latLng) {
+////        latLng=new LatLng(117.358578,39.119912);
+//        mEndPoint = convertToLatLonPoint(latLng);
+////        mEndPoint=new LatLonPoint(117.358578,39.119912);
+////39.11360516680258 117.35223882307065
+//        startRouteSearch();
+//    }
 
     /**
      * 初始化路线
