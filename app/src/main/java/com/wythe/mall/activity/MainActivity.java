@@ -14,9 +14,9 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.wythe.mall.adapter.FragmentTabAdapter;
 import com.wythe.mall.ui.CategoryFragment;
 import com.wythe.mall.ui.My_HomeFragment;
-import com.wythe.mall.ui.ShowMap;
 import com.wythe.mall.ui.CartFragment;
 import com.wythe.mall.ui.PersonalFragment;
+import com.wythe.mall.ui.TotalDest;
 
 import net.micode.wcnm.R;
 
@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity {
         radio_button_group = (RadioGroup) findViewById(R.id.radio_button_group);
         fragments.add(new My_HomeFragment());
         fragments.add(new CategoryFragment());
-        fragments.add(new ShowMap());
+        fragments.add(new TotalDest());
         fragments.add(new CartFragment());
         fragments.add(new PersonalFragment());
         tabAdapter = new FragmentTabAdapter(this, fragments, R.id.fragment_content, radio_button_group);

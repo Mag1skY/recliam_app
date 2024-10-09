@@ -1,17 +1,16 @@
-package com.wythe.mall.ui;
+package com.wythe.mall.activity;
 
 import static com.wythe.mall.utils.MapUtil.convertToLatLng;
 import static com.wythe.mall.utils.MapUtil.convertToLatLonPoint;
 
 import android.Manifest;
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -20,7 +19,7 @@ import android.widget.Toast;
 //import com.wythe.mall.R;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -45,6 +44,7 @@ import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
+import com.wythe.mall.activity.BaseActivity;
 import com.wythe.mall.overlay.BusRouteOverlay;
 import com.wythe.mall.overlay.DrivingRouteOverlay;
 import com.wythe.mall.overlay.RideRouteOverlay;
@@ -57,13 +57,12 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class ShowMap extends Fragment implements AMapLocationListener, LocationSource,RouteSearch.OnRouteSearchListener {
+public class ShowMap extends Activity implements AMapLocationListener, LocationSource,RouteSearch.OnRouteSearchListener {
     //地图控制器
     private AMap aMap = null;
     //位置更改监听
     private OnLocationChangedListener mListener;
 
-    private View view;
     private MapView mapView;
 
     //声明AMapLocationClient类对象
@@ -78,7 +77,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
     //起点
     private LatLonPoint mStartPoint;
     //终点
-    private LatLonPoint mEndPoint;
+    public static LatLonPoint mEndPoint;
     //路线搜索对象
     private RouteSearch routeSearch;
     //出行方式数组
@@ -96,12 +95,14 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.map, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.map);
 
         MapsInitializer.setApiKey("da1c4219eea98fcc93e7a123391921bc");
 
-        mEndPoint=new LatLonPoint(39.11360516680258,117.35223882307065);
+//        mEndPoint=new LatLonPoint(39.11360516680258,117.35223882307065);
 
         initLocation();
 
@@ -113,13 +114,9 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
 
         initTravelMode();
 
-        return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
+
 
     /**
      * 检查Android版本
@@ -147,7 +144,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
 
-        if (EasyPermissions.hasPermissions(this.getContext(), permissions)) {
+        if (EasyPermissions.hasPermissions(this, permissions)) {
             //true 有权限 开始定位
             showMsg("已获得权限，可以定位啦！");
 
@@ -180,7 +177,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
      * @param msg 提示内容
      */
     private void showMsg(String msg) {
-        Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -189,7 +186,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
     private void initLocation() {
         //初始化定位
         try {
-            mLocationClient = new AMapLocationClient(this.getContext());
+            mLocationClient = new AMapLocationClient(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -206,7 +203,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
             //设置是否返回地址信息（默认返回地址信息）
             mLocationOption.setNeedAddress(true);
             //设置定位请求超时时间，单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
-            mLocationOption.setHttpTimeOut(30000);
+            mLocationOption.setHttpTimeOut(1000000);
             //关闭缓存机制，高精度定位会产生缓存。
             mLocationOption.setLocationCacheEnable(false);
             //给定位客户端对象设置定位参数
@@ -244,7 +241,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
                     startRouteSearch();
                 }
 
-                mLocationClient.startLocation();
+//                mLocationClient.startLocation();
 
                 if(mListener!=null){
                     mListener.onLocationChanged(aMapLocation);
@@ -263,7 +260,10 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
     @Override
     public void onDestroy(){
         super.onDestroy();
-        mLocationClient.onDestroy();
+        //销毁定位客户端，同时销毁本地定位服务。
+        if (mLocationClient != null) {
+            mLocationClient.onDestroy();
+        }
         mapView.onDestroy();
     }
 
@@ -291,7 +291,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
      * @param savedInstanceState
      */
     private void initMap(Bundle savedInstanceState) {
-        mapView = view.findViewById(R.id.map_view);
+        mapView = findViewById(R.id.map_view);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mapView.onCreate(savedInstanceState);
         //初始化地图控制器对象
@@ -343,7 +343,6 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
             mLocationClient.onDestroy();
         }
         mLocationClient = null;
-        mapView.onDestroy();
     }
 
 //    /**
@@ -363,7 +362,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
      */
     private void initRoute() {
         try {
-            routeSearch = new RouteSearch(this.getContext());
+            routeSearch = new RouteSearch(this);
         } catch (com.amap.api.services.core.AMapException e) {
             throw new RuntimeException(e);
         }
@@ -381,7 +380,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
                         return;
                     }
                     BusRouteOverlay busRouteOverlay = new BusRouteOverlay(
-                            this.getContext(), aMap, busPath,
+                            this, aMap, busPath,
                             busRouteResult.getStartPos(),
                             busRouteResult.getTargetPos());
                     busRouteOverlay.removeFromMap();
@@ -416,7 +415,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
                         return;
                     }
                     DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(
-                            this.getContext(), aMap, drivePath,
+                            this, aMap, drivePath,
                             driveRouteResult.getStartPos(),
                             driveRouteResult.getTargetPos(), null);
                     drivingRouteOverlay.removeFromMap();
@@ -456,7 +455,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
                     }
                     //绘制路线
                     WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(
-                            this.getContext(), aMap, walkPath,
+                            this, aMap, walkPath,
                             walkRouteResult.getStartPos(),
                             walkRouteResult.getTargetPos());
                     walkRouteOverlay.removeFromMap();
@@ -489,7 +488,7 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
                         return;
                     }
                     RideRouteOverlay rideRouteOverlay = new RideRouteOverlay(
-                            this.getContext(), aMap, ridePath,
+                            this, aMap, ridePath,
                             rideRouteResult.getStartPos(),
                             rideRouteResult.getTargetPos());
                     rideRouteOverlay.removeFromMap();
@@ -568,10 +567,10 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
      * 初始化出行方式
      */
     private void initTravelMode() {
-        Spinner spinner = view.findViewById(R.id.spinner);
+        Spinner spinner = findViewById(R.id.spinner);
 
         //将可选内容与ArrayAdapter连接起来
-        arrayAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, travelModeArray);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, travelModeArray);
         //设置下拉列表的风格
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //将adapter 添加到spinner中
@@ -589,5 +588,8 @@ public class ShowMap extends Fragment implements AMapLocationListener, LocationS
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

@@ -48,6 +48,7 @@
         <activity android:name="com.wythe.mall.activity.ExpressActivity"/>
         <activity android:name="com.wythe.mall.activity.ProductActivity" android:windowSoftInputMode="stateHidden"/>
         <activity android:name="com.wythe.mall.activity.ProductDetailActivity"/>
+        <activity android:name="com.wythe.mall.activity.ShowMap"/>
         <!--Image Selector Entry-->
 
         <activity

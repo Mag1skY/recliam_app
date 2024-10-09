@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.wythe.mall.ui.ProductInfoFragment;
-import com.wythe.mall.ui.ShowMap;
+import com.wythe.mall.ui.TotalDest;
 import com.wythe.mall.view.Indicator;
 
 import net.micode.wcnm.R;
@@ -58,8 +58,8 @@ public class ProductDetailActivity extends FragmentActivity implements View.OnCl
         //List
         list = new ArrayList<Fragment>();
         list.add(new ProductInfoFragment());
-        list.add(new ShowMap());
-        list.add(new ShowMap());
+        list.add(new TotalDest());
+        list.add(new TotalDest());
         //Adapter
         mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

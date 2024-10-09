@@ -12,6 +12,7 @@ import net.micode.wcnm.R;
  * Created by wythe on 2016/7/17.
  */
 public class BalanceActivity extends BaseActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
