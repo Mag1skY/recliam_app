@@ -28,7 +28,7 @@ public class ClientThread{
     public static int point;
 
 
-    public static int val_point;
+    public static int val_point=0;
     public static String statue;
 
     public boolean run() {

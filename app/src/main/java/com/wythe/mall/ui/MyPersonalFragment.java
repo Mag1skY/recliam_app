@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -21,11 +22,21 @@ public class MyPersonalFragment extends Fragment implements View.OnClickListener
 
     private View view;
 
+    private TextView point;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.my_fragment_personal, container, false);
         initView();
+        point=(TextView) view.findViewById(R.id.my_point);
+        if(UserManager.getInstance().isLogin()==false){
+            point.setText("登录后查看");
+            point.setTextSize(50);
+        }else{
+            point.setText(Integer.toString(UserManager.getInstance().point));
+            point.setTextSize(70);
+        }
         return view;
     }
 
