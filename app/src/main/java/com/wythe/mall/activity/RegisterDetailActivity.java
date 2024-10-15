@@ -2,7 +2,6 @@ package com.wythe.mall.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 //import com.wythe.mall.R;
 import com.wythe.mall.Client.ClientThread;
 import com.wythe.mall.Client.ClientVal;
-import com.wythe.mall.Client.Mythread;
 import com.wythe.mall.utils.Api;
 import com.wythe.mall.utils.BPUtil;
 import com.wythe.mall.utils.GotoActivity;

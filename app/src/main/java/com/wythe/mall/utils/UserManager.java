@@ -8,6 +8,8 @@ public class UserManager {
     private String phone;
     private String userId;
     private boolean isLogin = false;
+
+    public int point;
     private UserManager userManager;
 
     private UserManager(){ }

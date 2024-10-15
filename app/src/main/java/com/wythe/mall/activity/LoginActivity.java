@@ -1,5 +1,8 @@
 package com.wythe.mall.activity;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.wythe.mall.R;
+import com.wythe.mall.Client.ClientThread;
+import com.wythe.mall.Client.ClientVal;
 import com.wythe.mall.utils.GotoActivity;
 import com.wythe.mall.utils.UserManager;
 
@@ -118,9 +123,51 @@ public class LoginActivity extends BaseActivity {
                 edPassword.requestFocus();
             }
         }else if(v.getId()==R.id.login_comfirm_button){
-            Toast.makeText(this,"denglu",Toast.LENGTH_LONG).show();
-            UserManager.getInstance().setLogin(true);
-            finish();
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("请稍后");
+            progressDialog.setMessage("正在登录账户");
+            progressDialog.setMax(100);
+            progressDialog.setProgress(0);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            ClientThread clientThread = new ClientThread();
+            ClientThread.username = edUsername.getText().toString();
+            ClientThread.password = edPassword.getText().toString();
+            ClientThread.operators = ClientVal.VERIFY;
+            ClientThread.point = 0;
+            Activity activity=this;
+            new AsyncTask<View, View, Boolean>() {
+                @Override
+                protected void onPreExecute() {
+                    // 显示加载指示器
+                    progressDialog.show();
+                }
+
+                @Override
+                protected Boolean doInBackground(View... views) {
+                    return clientThread.run();
+                }
+
+                @Override
+                protected void onPostExecute(Boolean success) {
+                    progressDialog.dismiss();
+                    if (success) {
+                        if(clientThread.check()==false){
+                            RegisterCompleteActivity.s="登录成功";
+                            UserManager.getInstance().setLogin(true);
+                            UserManager.getInstance().point=clientThread.val_point;
+                        }
+                    } else {
+                        RegisterCompleteActivity.s="服务器错误";
+                        // 登录失败，显示错误信息
+//                        Toast.makeText(context, "服务器错误", Toast.LENGTH_SHORT).show();
+
+                    }
+                    GotoActivity.gotoActiviy(activity, RegisterCompleteActivity.class, true);
+                }
+            }.execute();
+//            Toast.makeText(this,"denglu",Toast.LENGTH_LONG).show();
+//            UserManager.getInstance().setLogin(true);
+//            finish();
         }else if(v.getId()==R.id.register_link) {
             GotoActivity.gotoActiviy(LoginActivity.this, RegisterActivity.class);
         }else if(v.getId()==R.id.login_page_find_password) {

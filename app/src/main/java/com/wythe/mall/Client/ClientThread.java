@@ -39,7 +39,7 @@ public class ClientThread{
         try {
             InetAddress serverAddr=InetAddress.getByName(SERVER_IP);
             socket=new Socket(serverAddr,SERVER_PORT);
-            socket.setSoTimeout(5000);
+            socket.setSoTimeout(100);
             out=new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
             out.println(Integer.toString(operators)+":"+username+":"+password+":"+Integer.toString(point));
 
