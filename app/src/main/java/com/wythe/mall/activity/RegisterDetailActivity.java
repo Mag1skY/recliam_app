@@ -1,7 +1,11 @@
 package com.wythe.mall.activity;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +15,9 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 //import com.wythe.mall.R;
+import com.wythe.mall.Client.ClientThread;
+import com.wythe.mall.Client.ClientVal;
+import com.wythe.mall.Client.Mythread;
 import com.wythe.mall.utils.Api;
 import com.wythe.mall.utils.BPUtil;
 import com.wythe.mall.utils.GotoActivity;
@@ -51,9 +58,9 @@ public class RegisterDetailActivity extends BaseActivity {
     private ImageView imgCertificate, imgHome, imgVerifyCode;
     private ScrollView scrollView;
     private Bitmap bmpVerifyCode;
-    private MyEditText etUsername, etPassword, etConfirmPassword,etContactName,etContactPosition,etContactPhone,etPhone,etEmail,etQQ,etWechat;
-    private MyEditText etInteretProduct,etCompanyName, etCompanyLocation,etCompanyAddress,etCompanyType,etVerifyCode;
-    private String certificatePhoto = null,homePhoto = null, pageVerifyCode,verifyCode;
+    private MyEditText etUsername, etPassword, etConfirmPassword, etContactName, etContactPosition, etContactPhone, etPhone, etEmail, etQQ, etWechat;
+    private MyEditText etInteretProduct, etCompanyName, etCompanyLocation, etCompanyAddress, etCompanyType, etVerifyCode;
+    private String certificatePhoto = null, homePhoto = null, pageVerifyCode, verifyCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +120,7 @@ public class RegisterDetailActivity extends BaseActivity {
             Toast.makeText(this, "请填写确认密码", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (!TextUtils.equals(etPassword.getText().toString().trim(),etConfirmPassword.getText().toString().trim())){
+        if (!TextUtils.equals(etPassword.getText().toString().trim(), etConfirmPassword.getText().toString().trim())) {
             Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -157,7 +164,7 @@ public class RegisterDetailActivity extends BaseActivity {
             Toast.makeText(this, "请输入验证码", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (!TextUtils.equals(etVerifyCode.getText().toString().trim(), pageVerifyCode)){
+        if (!TextUtils.equals(etVerifyCode.getText().toString().trim(), pageVerifyCode)) {
             Toast.makeText(this, "验证码输入错误", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -168,55 +175,105 @@ public class RegisterDetailActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        if(v.getId()==R.id.company_certificate_photo_button){
+        if (v.getId() == R.id.company_certificate_photo_button) {
             pickImage(REQUEST_IMAGE_COMPANY_CERTIFICATE);
-        }else if(v.getId()==R.id.company_home_photo_button){
+        } else if (v.getId() == R.id.company_home_photo_button) {
             pickImage(REQUEST_IMAGE_COMPANY_HOME);
-        }else if(v.getId()==R.id.register_input_verify_image_new){
+        } else if (v.getId() == R.id.register_input_verify_image_new) {
             imgVerifyCode.setImageBitmap(BPUtil.getInstance().createBitmap());
             pageVerifyCode = BPUtil.getInstance().getCode();
-        }else if(v.getId()==R.id.register_complete_button){
-            GotoActivity.gotoActiviy(this, RegisterCompleteActivity.class, true);
+        } else if (v.getId() == R.id.register_complete_button) {
+            ClientThread clientThread = new ClientThread();
+            ClientThread.username = etUsername.getText().toString();
+            ClientThread.password = etPassword.getText().toString();
+            ClientThread.operators = ClientVal.ADD_USER;
+            ClientThread.point = 0;
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("请稍后");
+            progressDialog.setMessage("正在注册账户");
+            progressDialog.setMax(100);
+            progressDialog.setProgress(0);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+            Activity activity=this;
+
+            new AsyncTask<View, View, Boolean>() {
+                @Override
+                protected void onPreExecute() {
+                    // 显示加载指示器
+                    progressDialog.show();
+                }
+
+                @Override
+                protected Boolean doInBackground(View... views) {
+                    return clientThread.run();
+                }
+
+                @Override
+                protected void onPostExecute(Boolean success) {
+                    progressDialog.dismiss();
+                    if (success) {
+                        if(clientThread.check()==false){
+                            RegisterCompleteActivity.s="注册成功";
+                        }
+                    } else {
+                        RegisterCompleteActivity.s="服务器错误";
+                        // 登录失败，显示错误信息
+//                        Toast.makeText(context, "服务器错误", Toast.LENGTH_SHORT).show();
+
+                    }
+                    GotoActivity.gotoActiviy(activity, RegisterCompleteActivity.class, true);
+                }
+            }.execute();
+//            Mythread mythread= new Mythread(progressDialog,clientThread);
+//            mythread.execute();
+//            if(mythread.ok)
+//                 if (mythread.clientThread.check(this)==false) {
+//                     GotoActivity.gotoActiviy(this, RegisterCompleteActivity.class, true);
+//                 }
+//            else
+//                Toast.makeText(this, "服务器错误", Toast.LENGTH_SHORT).show();
+
         }
     }
 
-    private void doRegister(){
+    private void doRegister() {
         OkHttpUtils.post()
-                .addParams("username",etUsername.getText().toString().trim()).addParams("password",etPassword.getText().toString().trim())
-                .addParams("repassword",etConfirmPassword.getText().toString().trim()).addParams("true_name",etContactName.getText().toString().trim())
-                .addParams("position",etContactPosition.getText().toString().trim()).addParams("telephone",etContactPhone.getText().toString())
-                .addParams("mobile",etPhone.getText().toString().trim()).addParams("code",verifyCode)
-                .addParams("email",etEmail.getText().toString().trim()).addParams("qq",etQQ.getText().toString().trim())
-                .addParams("weixin",etWechat.getText().toString().trim()).addParams("love_type",etInteretProduct.getText().toString().trim())
-                .addParams("com_name",etCompanyName.getText().toString().trim()).addParams("province",etCompanyLocation.getText().toString().trim())
-                .addParams("city","苏州").addParams("area","工业园区")//TODO 界面没有输入的地方
-                .addParams("contact_addr",etCompanyAddress.getText().toString().trim()).addParams("vocation",etCompanyType.getText().toString().trim())
-                .addFile("page_img","page_img",new File(certificatePhoto))
-                .addFile("vivid_img","vivid_img",new File(homePhoto))
-                .url(Api.API_SERVER+Api.USERREG)
+                .addParams("username", etUsername.getText().toString().trim()).addParams("password", etPassword.getText().toString().trim())
+                .addParams("repassword", etConfirmPassword.getText().toString().trim()).addParams("true_name", etContactName.getText().toString().trim())
+                .addParams("position", etContactPosition.getText().toString().trim()).addParams("telephone", etContactPhone.getText().toString())
+                .addParams("mobile", etPhone.getText().toString().trim()).addParams("code", verifyCode)
+                .addParams("email", etEmail.getText().toString().trim()).addParams("qq", etQQ.getText().toString().trim())
+                .addParams("weixin", etWechat.getText().toString().trim()).addParams("love_type", etInteretProduct.getText().toString().trim())
+                .addParams("com_name", etCompanyName.getText().toString().trim()).addParams("province", etCompanyLocation.getText().toString().trim())
+                .addParams("city", "苏州").addParams("area", "工业园区")//TODO 界面没有输入的地方
+                .addParams("contact_addr", etCompanyAddress.getText().toString().trim()).addParams("vocation", etCompanyType.getText().toString().trim())
+                .addFile("page_img", "page_img", new File(certificatePhoto))
+                .addFile("vivid_img", "vivid_img", new File(homePhoto))
+                .url(Api.API_SERVER + Api.USERREG)
                 .build().execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e(TAG,e.getMessage());
+                        Log.e(TAG, e.getMessage());
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         JSONObject json = null;
                         try {
-                            Log.e(TAG,response);
+                            Log.e(TAG, response);
                             json = new JSONObject(response);
                             int state = json.getInt("state_code");
                             String msg = json.getString("msg");
-                            if (state != 200){
-                                Toast.makeText(RegisterDetailActivity.this,msg,Toast.LENGTH_LONG).show();
-                                return ;
+                            if (state != 200) {
+                                Toast.makeText(RegisterDetailActivity.this, msg, Toast.LENGTH_LONG).show();
+                                return;
                             }
-                            Toast.makeText(RegisterDetailActivity.this,msg,Toast.LENGTH_LONG).show();
-                            GotoActivity.gotoActiviy(RegisterDetailActivity.this,LoginActivity.class,true);
+                            Toast.makeText(RegisterDetailActivity.this, msg, Toast.LENGTH_LONG).show();
+                            GotoActivity.gotoActiviy(RegisterDetailActivity.this, LoginActivity.class, true);
 
                         } catch (JSONException e) {
-                            Log.e(TAG,e.getMessage());
+                            Log.e(TAG, e.getMessage());
                         }
 
                     }

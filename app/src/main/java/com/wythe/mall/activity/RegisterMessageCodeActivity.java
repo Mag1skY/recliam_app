@@ -35,7 +35,7 @@ public class RegisterMessageCodeActivity extends BaseActivity {
     private MyEditText edMessageCode;
     private Button btnGetVerifyCode,btnInputNext;
     private TextView tvTip;
-    private String phoneNum;
+//    private String phoneNum;
     private String verifyCode;
 
     @Override
@@ -53,12 +53,12 @@ public class RegisterMessageCodeActivity extends BaseActivity {
         super.initView();
         ((TextView)findViewById(R.id.titleText)).setText(R.string.quick_register);
         findViewById(R.id.inputNext).setOnClickListener(this);
+        findViewById(R.id.get_verify_code1).setOnClickListener(this);
         edMessageCode = (MyEditText) findViewById(R.id.input_message_code);
-        btnGetVerifyCode = (Button) findViewById(R.id.get_verify_code);
+        btnGetVerifyCode = (Button) findViewById(R.id.get_verify_code1);
         btnInputNext = (Button) findViewById(R.id.inputNext);
         tvTip = (TextView) findViewById(R.id.tip);
         tvTip.setText(getResources().getString(R.string.regist_pleasedInput)
-                + phoneNum
                 + getResources().getString(R.string.regist_messageCode));
     }
 
@@ -75,7 +75,7 @@ public class RegisterMessageCodeActivity extends BaseActivity {
 //                } else {
 //                    Toast.makeText(this,"验证码输入错误",Toast.LENGTH_SHORT).show();
 //                }
-        }else if(v.getId()==R.id.get_verify_code){
+        }else if(v.getId()==R.id.get_verify_code1){
             sendMsg();
         }
     }

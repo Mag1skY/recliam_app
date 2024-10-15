@@ -33,7 +33,7 @@
        >
 
           <Button
-             android:id="@+id/get_verify_code"
+             android:id="@+id/get_verify_code1"
              android:layout_width="105dp"
              android:layout_height="48dip"
              android:layout_alignParentRight="true"

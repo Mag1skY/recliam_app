@@ -18,6 +18,8 @@ public class RegisterCompleteActivity extends BaseActivity {
 
     private CountDownTimer countDownTimer;
     private TextView tvCountTimer;
+    private TextView textView;
+    public static String s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,10 @@ public class RegisterCompleteActivity extends BaseActivity {
         super.initView();
         super.setNormalTitle(R.string.approval_tip);
         tvCountTimer = (TextView) findViewById(R.id.count_timer);
+        if(s!=null){
+            textView=(TextView)findViewById(R.id.showmessage);
+            textView.setText(s);
+        }
         createCountDownTimer();
         countDownTimer.start();
     }
