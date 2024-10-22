@@ -163,6 +163,7 @@ public class LoginActivity extends BaseActivity {
 
                     }
                     GotoActivity.gotoActiviy(activity, RegisterCompleteActivity.class, true);
+                    finish();
                 }
             }.execute();
 //            Toast.makeText(this,"denglu",Toast.LENGTH_LONG).show();
@@ -170,6 +171,7 @@ public class LoginActivity extends BaseActivity {
 //            finish();
         }else if(v.getId()==R.id.register_link) {
             GotoActivity.gotoActiviy(LoginActivity.this, RegisterActivity.class);
+            finish();
         }else if(v.getId()==R.id.login_page_find_password) {
             GotoActivity.gotoActiviy(LoginActivity.this, FindPasswordActivity.class);
         }

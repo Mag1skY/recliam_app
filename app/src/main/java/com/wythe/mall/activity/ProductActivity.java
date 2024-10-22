@@ -1,7 +1,10 @@
 package com.wythe.mall.activity;
 
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 //import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -17,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.wythe.mall.adapter.ProductGridItem;
 import com.wythe.mall.adapter.ProductListItem;
+import com.wythe.mall.tool.ImageDownloader;
 import com.wythe.mall.utils.GotoActivity;
 import com.zhy.adapter.abslistview.CommonAdapter;
 import com.zhy.adapter.abslistview.ViewHolder;
@@ -79,12 +83,15 @@ public class ProductActivity extends BaseActivity {
     }
 
     private void initData(){
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","¥988","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","¥988","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","¥988","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","¥988","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","¥988","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","¥988","购买1-199件时享受优惠"));
+//        https://img.moegirl.org.cn/common/9/90/Quagmire.jpg
+        listItems.add(new ProductListItem("https://bkimg.cdn.bcebos.com/pic/b3fb43166d224f4a20a4c6efa9b887529822730e7bb5?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080",
+                "出生拉波尔塔","1积分","出生"));
+        listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/9/90/Quagmire.jpg",
+                "出生衡红军","0积分","出生中的出生，免费送"));
+        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","100积分","购买1-199件时享受优惠"));
+        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","101积分","购买1-199件时享受优惠"));
+        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","120积分","购买1-199件时享受优惠"));
+        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","133积分","购买1-199件时享受优惠"));
 
         gridItems.add(new ProductGridItem("","淮柴动力发动机五配套(003)","¥23156.90","","淮柴动力发动机五配套(003)","¥23156.90"));
         gridItems.add(new ProductGridItem("","淮柴动力发动机五配套(003)","¥23156.90","","淮柴动力发动机五配套(003)","¥23156.90"));
@@ -123,7 +130,11 @@ public class ProductActivity extends BaseActivity {
         lvProductList.setAdapter(new CommonAdapter<ProductListItem>(this, R.layout.product_list_item, listItems) {
             @Override
             protected void convert(ViewHolder viewHolder, ProductListItem item, int position) {
+                Log.e("WCNM123",Integer.toString(position));
                 View view = viewHolder.getConvertView();
+                if(item.getImgPath().length()>=10){
+                    new ImageDownloader((ImageView) view.findViewById(R.id.list_item_image)).execute(item.getImgPath());
+                }
                 ((TextView)view.findViewById(R.id.list_item_title)).setText(item.getTitle());
                 ((TextView)view.findViewById(R.id.list_item_price)).setText(item.getPrice());
                 ((TextView)view.findViewById(R.id.list_item_info)).setText(item.getInfo());

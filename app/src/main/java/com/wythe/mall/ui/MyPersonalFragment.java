@@ -30,13 +30,6 @@ public class MyPersonalFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.my_fragment_personal, container, false);
         initView();
         point=(TextView) view.findViewById(R.id.my_point);
-        if(UserManager.getInstance().isLogin()==false){
-            point.setText("登录后查看");
-            point.setTextSize(50);
-        }else{
-            point.setText(Integer.toString(UserManager.getInstance().point));
-            point.setTextSize(70);
-        }
         return view;
     }
 
@@ -64,10 +57,14 @@ public class MyPersonalFragment extends Fragment implements View.OnClickListener
             view.findViewById(R.id.personal_for_not_login).setVisibility(View.GONE);
             view.findViewById(R.id.personal_for_login_info).setVisibility(View.VISIBLE);
             view.findViewById(R.id.personal_recommend_layout).setVisibility(View.VISIBLE);
+            point.setText(Integer.toString(UserManager.getInstance().point));
+            point.setTextSize(70);
         } else {
             view.findViewById(R.id.personal_for_not_login).setVisibility(View.VISIBLE);
             view.findViewById(R.id.personal_for_login_info).setVisibility(View.GONE);
             view.findViewById(R.id.personal_recommend_layout).setVisibility(View.GONE);
+            point.setText("登录后查看");
+            point.setTextSize(50);
         }
     }
 

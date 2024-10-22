@@ -4,11 +4,12 @@
     android:layout_height="120dp" android:background="@color/white"
     android:paddingLeft="10dp" android:paddingRight="10dp"
     android:paddingTop="10dp" android:paddingBottom="10dp">
+
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/list_item_image"
-        android:src="@drawable/home_shanpin003"/>
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/home_shanpin003" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
             android:layout_above="@+id/list_item_info_container"
             android:text="¥988"
             android:textSize="25dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

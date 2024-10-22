@@ -68,7 +68,6 @@ public class RegisterActivity extends BaseActivity {
                     //发送验证码操作
                     //sendMsg();
                     GotoActivity.gotoActiviy(RegisterActivity.this,RegisterMessageCodeActivity.class,true);
-
                 }
             });
             mallDialog.show();

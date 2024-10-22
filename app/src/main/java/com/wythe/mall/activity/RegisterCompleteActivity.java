@@ -54,7 +54,8 @@ public class RegisterCompleteActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                GotoActivity.gotoActiviy(RegisterCompleteActivity.this, MainActivity.class, true);
+//                GotoActivity.gotoActiviy(RegisterCompleteActivity.this, MainActivity.class, true);
+                finish();
             }
         };
     }
