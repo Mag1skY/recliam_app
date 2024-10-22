@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <com.youth.banner.Banner xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/home_banner"
+                android:id="@+id/home_banner1"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:layout_width="150dp"
                 android:layout_height="200dp" />
@@ -25,6 +25,7 @@
                 android:background="@color/divider_color"/>
             <!--价格-->
             <TextView
+                android:id="@+id/my_product_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -33,6 +34,7 @@
                 android:textSize="20dp"
                 android:text="离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆"/>
             <TextView
+                android:id="@+id/my_product_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -46,6 +48,7 @@
                 android:orientation="vertical"
                 android:background="#FFECF2">
                 <TextView
+                    android:id="@+id/my_product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -375,6 +378,7 @@
                     android:gravity="center_horizontal|center_vertical"
                     android:text="加入购物车"/>
                 <TextView
+                    android:id="@+id/buy"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:layout_height="match_parent"

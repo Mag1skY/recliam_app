@@ -155,6 +155,7 @@ public class LoginActivity extends BaseActivity {
                             RegisterCompleteActivity.s="登录成功";
                             UserManager.getInstance().setLogin(true);
                             UserManager.getInstance().point=clientThread.val_point;
+                            UserManager.getInstance().setUsername(clientThread.username);
                         }
                     } else {
                         RegisterCompleteActivity.s="服务器错误";

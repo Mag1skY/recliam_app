@@ -1,5 +1,6 @@
 package com.wythe.mall.activity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,9 +19,11 @@ import android.widget.Toast;
 //import com.wythe.mall.R;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.squareup.picasso.Picasso;
 import com.wythe.mall.adapter.ProductGridItem;
 import com.wythe.mall.adapter.ProductListItem;
 import com.wythe.mall.tool.ImageDownloader;
+import com.wythe.mall.ui.ProductInfoFragment;
 import com.wythe.mall.utils.GotoActivity;
 import com.zhy.adapter.abslistview.CommonAdapter;
 import com.zhy.adapter.abslistview.ViewHolder;
@@ -46,13 +49,27 @@ public class ProductActivity extends BaseActivity {
     private LinearLayout llRightMenu;
     private AutoCompleteTextView atvSearchText;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_list);
+        context=this;
         initView();
+        myinit();
     }
 
+    private void myinit(){
+        lvProductList.setVisibility(View.VISIBLE);
+        lvProductGrid.setVisibility(View.GONE);
+        if (isGrid){
+            imgSwitch.setImageDrawable(getResources().getDrawable(R.drawable.product_list));
+        } else {
+            imgSwitch.setImageDrawable(getResources().getDrawable(R.drawable.product_grid));
+        }
+        isGrid = !isGrid;
+    }
     @Override
     protected void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -85,13 +102,17 @@ public class ProductActivity extends BaseActivity {
     private void initData(){
 //        https://img.moegirl.org.cn/common/9/90/Quagmire.jpg
         listItems.add(new ProductListItem("https://bkimg.cdn.bcebos.com/pic/b3fb43166d224f4a20a4c6efa9b887529822730e7bb5?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080",
-                "出生拉波尔塔","1积分","出生"));
+                "出生拉波尔塔","1","出生"));
         listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/9/90/Quagmire.jpg",
-                "出生衡红军","0积分","出生中的出生，免费送"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","100积分","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","101积分","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","120积分","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("","离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","133积分","购买1-199件时享受优惠"));
+                "出生衡红军","0","出生中的出生，免费送"));
+        listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/9/90/Quagmire.jpg",
+                "离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","100","购买1-199件时享受优惠"));
+        listItems.add(new ProductListItem("",
+                "离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","101","购买1-199件时享受优惠"));
+        listItems.add(new ProductListItem(""
+                ,"离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","120","购买1-199件时享受优惠"));
+        listItems.add(new ProductListItem(""
+                ,"离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","133","购买1-199件时享受优惠"));
 
         gridItems.add(new ProductGridItem("","淮柴动力发动机五配套(003)","¥23156.90","","淮柴动力发动机五配套(003)","¥23156.90"));
         gridItems.add(new ProductGridItem("","淮柴动力发动机五配套(003)","¥23156.90","","淮柴动力发动机五配套(003)","¥23156.90"));
@@ -132,17 +153,21 @@ public class ProductActivity extends BaseActivity {
             protected void convert(ViewHolder viewHolder, ProductListItem item, int position) {
                 Log.e("WCNM123",Integer.toString(position));
                 View view = viewHolder.getConvertView();
-                if(item.getImgPath().length()>=10){
-                    new ImageDownloader((ImageView) view.findViewById(R.id.list_item_image)).execute(item.getImgPath());
-                }
+//                if(item.getImgPath().length()>=10){
+//                    new ImageDownloader((ImageView) view.findViewById(R.id.list_item_image)).execute(item.getImgPath());
+//                }
                 ((TextView)view.findViewById(R.id.list_item_title)).setText(item.getTitle());
-                ((TextView)view.findViewById(R.id.list_item_price)).setText(item.getPrice());
+                ((TextView)view.findViewById(R.id.list_item_price)).setText(item.getPrice()+"积分");
                 ((TextView)view.findViewById(R.id.list_item_info)).setText(item.getInfo());
+                if(item.getImgPath().length()>=10){
+                    Picasso.with(context).load(item.getImgPath()).into((ImageView) view.findViewById(R.id.list_item_image));
+                }
             }
         });
         lvProductList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProductInfoFragment.productListItem=listItems.get(position);
                 GotoActivity.gotoActiviy(ProductActivity.this, ProductDetailActivity.class);
             }
         });
@@ -173,24 +198,25 @@ public class ProductActivity extends BaseActivity {
             mDrawerLayout.closeDrawer(llRightMenu);
         }else if(v.getId()==R.id.sort_search_button_yipei){
             mDrawerLayout.openDrawer(llRightMenu);
-        }else if(v.getId()== R.id.right_switch){
-            if (lvProductList.getVisibility() == View.VISIBLE){
-                lvProductList.setVisibility(View.GONE);
-            } else {
-                lvProductList.setVisibility(View.VISIBLE);
-            }
-            if (lvProductGrid.getVisibility() == View.VISIBLE){
-                lvProductGrid.setVisibility(View.GONE);
-            } else {
-                lvProductGrid.setVisibility(View.VISIBLE);
-            }
-            //切换图标
-            if (isGrid){
-                imgSwitch.setImageDrawable(getResources().getDrawable(R.drawable.product_list));
-            } else {
-                imgSwitch.setImageDrawable(getResources().getDrawable(R.drawable.product_grid));
-            }
-            isGrid = !isGrid;
         }
+//        else if(v.getId()== R.id.right_switch){
+//            if (lvProductList.getVisibility() == View.VISIBLE){
+//                lvProductList.setVisibility(View.GONE);
+//            } else {
+//                lvProductList.setVisibility(View.VISIBLE);
+//            }
+//            if (lvProductGrid.getVisibility() == View.VISIBLE){
+//                lvProductGrid.setVisibility(View.GONE);
+//            } else {
+//                lvProductGrid.setVisibility(View.VISIBLE);
+//            }
+//            //切换图标
+//            if (isGrid){
+//                imgSwitch.setImageDrawable(getResources().getDrawable(R.drawable.product_list));
+//            } else {
+//                imgSwitch.setImageDrawable(getResources().getDrawable(R.drawable.product_grid));
+//            }
+//            isGrid = !isGrid;
+//        }
     }
 }
