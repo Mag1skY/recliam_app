@@ -29,217 +29,6 @@
                 android:layout_height="150dp" />
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:baselineAligned="false"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_category"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:background="@drawable/home_category"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_category_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_category"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_reclaim"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:padding="0dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/reclaim_logo" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_my_reclaim"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_my_yipei"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:background="@drawable/home_my_yipei"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_my_yipei_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_my_yipei"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_wuliu"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:background="@drawable/home_wuliu"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_wuliu_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_wuliu"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:baselineAligned="false"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_ticket"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:background="@drawable/home_ticket"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_ticket_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_ticket"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_bbs"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:background="@drawable/home_bbs"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_bbs_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_bbs"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_score"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:background="@drawable/home_score"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_score_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_score"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-
-                <LinearLayout
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/my_home_invoice"
-                        android:layout_width="@dimen/home_main_button_width"
-                        android:layout_height="@dimen/home_main_button_height"
-                        android:background="@drawable/home_invoice"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_invoice_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_invoice"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/micro_text_size" />
-                </LinearLayout>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -295,6 +84,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/change_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -307,7 +97,7 @@
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp">
 
-                    <ImageButton
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -329,7 +119,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="¥3999"
+                            android:text="3999积分"
                             android:textColor="@color/red"
                             android:textSize="@dimen/cuxiao_text_size" />
 
@@ -350,7 +140,7 @@
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp">
 
-                    <ImageButton
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -372,99 +162,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="¥3999"
-                            android:textColor="@color/red"
-                            android:textSize="@dimen/cuxiao_text_size" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="促销价登录可见"
-                            android:textSize="@dimen/micro_text_size" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@color/white"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_shanpin001" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="淮柴动力发动机五配套"
-                        android:textSize="15dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="¥3999"
-                            android:textColor="@color/red"
-                            android:textSize="@dimen/cuxiao_text_size" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="促销价登录可见"
-                            android:textSize="@dimen/micro_text_size" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp">
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@color/white"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/home_shanpin001" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="淮柴动力发动机五配套"
-                        android:textSize="15dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="¥3999"
+                            android:text="3999积分"
                             android:textColor="@color/red"
                             android:textSize="@dimen/cuxiao_text_size" />
 

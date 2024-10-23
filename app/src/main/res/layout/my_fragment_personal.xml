@@ -294,16 +294,16 @@
                     android:gravity="center"
                     android:paddingTop="25dp"
                     android:paddingBottom="25dp"
-                    android:id="@+id/personal_guanzhu">
+                    android:id="@+id/personal_guan">
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/personal_guanzhu"
+                        android:src="@drawable/home_invoice_icon"
                         android:scaleType="fitCenter"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="我的关注"/>
+                        android:text="后台管理"/>
 
                 </LinearLayout>
                 <View

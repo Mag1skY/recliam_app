@@ -101,18 +101,18 @@ public class ProductActivity extends BaseActivity {
 
     private void initData(){
 //        https://img.moegirl.org.cn/common/9/90/Quagmire.jpg
-        listItems.add(new ProductListItem("https://bkimg.cdn.bcebos.com/pic/b3fb43166d224f4a20a4c6efa9b887529822730e7bb5?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080",
-                "出生拉波尔塔","1","出生"));
-        listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/9/90/Quagmire.jpg",
-                "出生衡红军","0","出生中的出生，免费送"));
         listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/9/90/Quagmire.jpg",
                 "离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","100","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem("",
+        listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/0/0e/Peter_Griffin.jpg",
                 "离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","101","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem(""
+        listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/7/72/Stewie_Griffin.jpg"
                 ,"离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","120","购买1-199件时享受优惠"));
-        listItems.add(new ProductListItem(""
+        listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/d/d1/Cleveland_Brown.jpg"
                 ,"离合器压盘总成 铁流德萨离合器压盘总成(380)杠杆","133","购买1-199件时享受优惠"));
+        listItems.add(new ProductListItem("https://bkimg.cdn.bcebos.com/pic/b3fb43166d224f4a20a4c6efa9b887529822730e7bb5?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080",
+                "拉波尔塔","1","出生"));
+        listItems.add(new ProductListItem("https://img.moegirl.org.cn/common/9/90/Quagmire.jpg",
+                "啊q","0","出生中的出生，免费送"));
 
         gridItems.add(new ProductGridItem("","淮柴动力发动机五配套(003)","¥23156.90","","淮柴动力发动机五配套(003)","¥23156.90"));
         gridItems.add(new ProductGridItem("","淮柴动力发动机五配套(003)","¥23156.90","","淮柴动力发动机五配套(003)","¥23156.90"));
